@@ -38,22 +38,22 @@ fun MenuRoute(
         onItemClick: (String) -> Unit
     ) {
     val uiState by viewModel.uiState.collectAsState()
-    Menu(
-        uiState = uiState,
-        onCategorySelected = viewModel::onCategorySelected,
-        onItemClick = onItemClick
-    )
+//    Menu(
+//        uiState = uiState,
+//        onCategorySelected = viewModel::onCategorySelected,
+//        onItemClick = onItemClick
+//    )
 }
 
 //@Preview
 //@Composable
-fun Menu(
-    uiState: MenuUiState,
-    onCategorySelected: (MenuCategory) -> Unit,
-    onItemClick: (String) -> Unit
-) {
-
-}
+//fun Menu(
+//    uiState: MenuUiState,
+//    onCategorySelected: (MenuCategory) -> Unit,
+//    onItemClick: (String) -> Unit
+//) {
+//
+//}
 
 @Preview
 @Composable
@@ -108,15 +108,15 @@ fun MenuScreen() {
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    MenuCategoryRow(
-                        categories = MenuCategory.entries,
-                        selected = TODO(),
-                        onCategorySelected = TODO()
-                    )
-                    LazyColumn (
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {  }
+//                    MenuCategoryRow(
+//                        categories = MenuCategory.entries,
+//                        selected = TODO(),
+//                        onCategorySelected = TODO()
+//                    )
+//                    LazyColumn (
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                    ) {  }
                 }
             }
         }

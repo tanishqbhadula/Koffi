@@ -1,7 +1,6 @@
-package com.example.koffi.Screens.Menu.Components
+package com.example.koffi.Screens.Menu
 
 import androidx.compose.runtime.Composable
-import com.example.koffi.Screens.Menu.MenuCategory
 
 @Composable
 fun MenuCategoryRow(

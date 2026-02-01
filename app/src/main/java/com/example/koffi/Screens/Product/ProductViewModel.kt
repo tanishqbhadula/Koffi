@@ -109,18 +109,18 @@ class ProductViewModel : ViewModel() {
         else {
             // TODO()
         }
+    }
 
-        fun onSelectedSize(size: DrinkSizes) {
-            val base = _uiState.value.drink?.price ?: return
-            val price = when(size) {
-                DrinkSizes.SMALL -> base
-                DrinkSizes.MEDIUM -> base + 20.0
-                DrinkSizes.LARGE -> base + 40.0
-            }
-            _uiState.value = _uiState.value.copy(
-                selectedSize = size,
-                finalPrice = price
-            )
+    fun onSelectedSize(size: DrinkSizes) {
+        val base = _uiState.value.drink?.price ?: return
+        val price = when(size) {
+            DrinkSizes.SMALL -> base
+            DrinkSizes.MEDIUM -> base + 20.0
+            DrinkSizes.LARGE -> base + 40.0
         }
+        _uiState.value = _uiState.value.copy(
+            selectedSize = size,
+            finalPrice = price
+        )
     }
 }

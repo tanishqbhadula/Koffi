@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.koffi.Screens.Home.HomePage
 import com.example.koffi.Screens.Menu.MenuScreen
+import com.example.koffi.Screens.Product.ProductScreen
 import com.example.koffi.Screens.Splash.SplashScreen
 
 class MainActivity : ComponentActivity() {
@@ -15,7 +16,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             //SplashScreen()
             //HomePage()
-            MenuScreen()
+            //MenuScreen()
+            ProductScreen()
         }
     }
 }

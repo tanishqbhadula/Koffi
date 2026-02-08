@@ -111,7 +111,7 @@ fun ProductScreen() {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "A classic Americano cocktail is a refreshing, low-ABV Italian aperitif made by combining 1–1.5 oz Campari and 1–1.5 oz sweet vermouth over ice in a rocks or highball glass, topped with a splash of soda water and garnished with an orange slice or twist. It is a lighter, bubbly, and less alcoholic variation of the Negroni. ",
+                    text = "Classic Americano coffee, is an espresso shot with hot water at a 1:3 to 1:4 ratio, resulting in a drink that retains the complex flavors of espresso, but in a lighter way. Its strength varies with the number of shots of espresso and the amount of water added.",
                     fontWeight = FontWeight.Normal,
                     fontSize = 20.sp,
                     fontFamily = FontFamily.Default,

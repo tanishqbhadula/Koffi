@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.koffi.Navigation.AppNavigation
 import com.example.koffi.Screens.Home.HomePage
 import com.example.koffi.Screens.Menu.MenuScreen
 import com.example.koffi.Screens.Product.ProductScreen
@@ -17,7 +20,9 @@ class MainActivity : ComponentActivity() {
             //SplashScreen()
             //HomePage()
             //MenuScreen()
-            ProductScreen()
+            //ProductScreen()
+            val navHostController = rememberNavController()
+            AppNavigation(navHostController)
         }
     }
 }

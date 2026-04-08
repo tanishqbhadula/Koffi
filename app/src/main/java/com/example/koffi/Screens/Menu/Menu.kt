@@ -1,5 +1,6 @@
 package com.example.koffi.Screens.Menu
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -183,11 +184,7 @@ fun MenuScreen(navHostController: NavHostController) {
                             modifier = Modifier.fillMaxWidth(),
                         ) {
                             IconButton(onClick = { // BACK BUTTON - GO BACK TO HOME PAGE
-                                navHostController.navigate(AppNavigationItem.HomeScreen.route) {
-                                    popUpTo(AppNavigationItem.MenuScreen.route) {
-                                        inclusive = true
-                                    }
-                                }
+                                navHostController.popBackStack()
                             }) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -228,8 +225,9 @@ fun MenuScreen(navHostController: NavHostController) {
                             MenuItemCard(
                                 drink = drink,
                                 onClick = { // GO TO DRINK - FOR TESTING ROUTE ALL TO CLASSIC AMERICANO DESC PAGE
+                                    //Log.d("Koffi","prod screen clicked")
                                     navHostController.navigate(AppNavigationItem.ProductScreen.route)
-                                } //TODO(PROD NAV NOT WORKING)
+                                }
                             )
                         }
                     }

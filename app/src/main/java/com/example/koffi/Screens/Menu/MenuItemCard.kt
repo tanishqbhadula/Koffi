@@ -36,7 +36,7 @@ fun MenuItemCard(
     Card (
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { }
+            .clickable { onClick() } // fixed : never called onclick here so menu item click didnt register
             .shadow(
                 elevation = 4.dp,
                 shape = RoundedCornerShape(10.dp)

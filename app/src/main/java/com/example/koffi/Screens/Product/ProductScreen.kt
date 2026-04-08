@@ -56,9 +56,10 @@ fun ProductScreen(navHostController: NavHostController) {
                 IconButton(
                     onClick = {
                         navHostController.navigate(AppNavigationItem.MenuScreen.route) {
-                            popUpTo(AppNavigationItem.ProductScreen.route) {
-                                inclusive = true
-                            }
+//                            popUpTo(AppNavigationItem.ProductScreen.route) {
+//                                inclusive = true
+//                            }
+                            navHostController.popBackStack()
                         }
                     } //TODO(POP CURR SCREEN AND GO BACK TO EXISTING STATE OF MENU)
 

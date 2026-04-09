@@ -1,4 +1,4 @@
-package com.example.koffi.Cart
+package com.example.koffi.Screens.Cart
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

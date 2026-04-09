@@ -1,4 +1,4 @@
-package com.example.koffi.Cart
+package com.example.koffi.Screens.Cart
 
 import android.graphics.drawable.Drawable
 import com.example.koffi.R

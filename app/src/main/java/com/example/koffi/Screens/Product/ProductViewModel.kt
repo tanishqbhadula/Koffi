@@ -1,6 +1,8 @@
 package com.example.koffi.Screens.Product
 
 import androidx.lifecycle.ViewModel
+import com.example.koffi.Screens.Cart.CartItem
+import com.example.koffi.Screens.Cart.CartManager
 import com.example.koffi.Models.Drink
 import com.example.koffi.Screens.Menu.MenuCategory
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -121,6 +123,21 @@ class ProductViewModel : ViewModel() {
         _uiState.value = _uiState.value.copy(
             selectedSize = size,
             finalPrice = price
+        )
+    }
+
+    fun addToCart() {
+        val state = _uiState.value
+        val drink = state.drink?:return
+
+        CartManager.addItem(
+            CartItem(
+                id = drink.id,
+                name = drink.name,
+                size = state.selectedSize,
+                quantity = 1,
+                price = state.finalPrice
+            )
         )
     }
 }

@@ -1,5 +1,6 @@
 package com.example.koffi.ui.theme
 
+import android.R
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -15,3 +16,6 @@ val navBarWhite = Color(0xFFF9FAFB)
 val bgWhite = Color(0xFFFAF7F7)
 val koffiBrown = Color(0xFF451c19)
 val bgSpecialGray = Color(0xFFEBECF5);
+
+//val bgCartGray = Color(0xFFf7f7f7);
+val bgCartGray = Color(0xFFe6e6e8);

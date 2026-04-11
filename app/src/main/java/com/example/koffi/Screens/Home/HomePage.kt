@@ -182,7 +182,9 @@ fun HomePage(navHostController: NavHostController) {
                     Icon(imageVector = Icons.Default.Star, contentDescription = "favs")
                 }
                 Spacer(Modifier.weight(1f))
-                IconButton(onClick = {}) { // CART - SHOPPING CART ICON
+                IconButton(onClick = {
+                    //navHostController.navigate(AppNavigationItem.CartScreen.route)
+                }) { // CART - SHOPPING CART ICON
                     Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "cart")
                 }
             }

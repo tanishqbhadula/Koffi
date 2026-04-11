@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.koffi.Screens.Cart.CartScreen
 import com.example.koffi.Screens.Home.HomePage
 import com.example.koffi.Screens.Menu.MenuScreen
 import com.example.koffi.Screens.Product.ProductScreen
@@ -24,5 +25,8 @@ fun AppNavigation(navHostController: NavHostController) {
         composable(AppNavigationItem.ProductScreen.route) {
             ProductScreen(navHostController)
         }
+//        composable(AppNavigationItem.CartScreen.route) {
+//            CartScreen(navHostController)
+//        }
     }
 }

@@ -144,6 +144,22 @@ fun CartScreen() {
                         }
                     }
                 }
+                Spacer(modifier = Modifier.height(6.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(2.dp, color = koffiBrown, shape = RoundedCornerShape(4.dp), )
+                        .shadow(
+                            elevation = 6.dp,
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .background(bgWhite, shape = RoundedCornerShape(4.dp))
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = "Apply Coupons"
+                    )
+                }
             }
         }
 

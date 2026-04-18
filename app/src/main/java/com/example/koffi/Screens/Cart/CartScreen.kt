@@ -22,6 +22,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -144,25 +145,34 @@ fun CartScreen() {
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .border(2.dp, color = koffiBrown, shape = RoundedCornerShape(4.dp), )
-                        .shadow(
-                            elevation = 6.dp,
-                            shape = RoundedCornerShape(4.dp)
-                        )
+                        .border(2.dp, color = koffiBrown.copy(alpha=0.85f), shape = RoundedCornerShape(4.dp), )
+//                        .shadow(
+//                            elevation = 6.dp,
+//                            shape = RoundedCornerShape(4.dp)
+//                        )
                         .background(bgWhite, shape = RoundedCornerShape(4.dp))
                         .padding(16.dp)
                 ) {
                     Text(
-                        text = "Apply Coupons"
+                        text = "Apply Coupon"
                     )
                 }
+                Spacer(modifier = Modifier.height(12.dp))
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                    thickness = 2.dp,
+                    color = Color.Black.copy(alpha=0.1f)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Bill Details", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, fontStyle = FontStyle.Normal, color = Color.Black
+                )
             }
         }
-
     }
 }
 

@@ -21,6 +21,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarDefaults
+import androidx.compose.material3.BottomAppBarScrollBehavior
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -38,7 +45,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.DefaultShadowColor
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -50,6 +61,7 @@ import com.example.koffi.ui.theme.bgCartGray
 import com.example.koffi.ui.theme.bgSpecialGray
 import com.example.koffi.ui.theme.bgWhite
 import com.example.koffi.ui.theme.koffiBrown
+import com.example.koffi.ui.theme.navBarWhite
 
 @Preview
 @Composable
@@ -65,8 +77,63 @@ fun CartScreen() {
                 title = "Cart",
                 onBackClick = {}
             )
+        },
+        bottomBar = {
+            BottomAppBar(
+                modifier = Modifier
+                    .shadow(
+                        elevation = 4.dp,
+                        shape = RectangleShape,
+                        ambientColor = DefaultShadowColor,
+                        spotColor = DefaultShadowColor
+                    )
+                    .fillMaxWidth(),
+                containerColor = bgWhite,
+                contentColor = Color.Black,
+                tonalElevation = BottomAppBarDefaults.ContainerElevation
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp, horizontal = 6.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        modifier = Modifier.padding(4.dp),
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "1 Item",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Normal,
+                            color = Color.Black
+                        )
+                        Text(
+                            text = "Rs. 248.00",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            fontStyle = FontStyle.Normal,
+                            color = Color.Black
+                        )
+                    }
+                    Button(
+                        onClick = {},
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = koffiBrown,
+                            contentColor = bgWhite
+                        )
+                    ) {
+                        Text(
+                            text = "Place Order"
+                        )
+                    }
+                }
+            }
         }
-
     ) {
         innerPadding ->
         Box(
@@ -79,7 +146,7 @@ fun CartScreen() {
                 modifier = Modifier
                     .fillMaxSize()
                     .background(bgCartGray)
-                    .padding(horizontal = 8.dp, vertical = 12.dp)
+                    .padding(horizontal = 12.dp, vertical = 14.dp)
                     .verticalScroll(scrollState)
             ) {
                 // CART ITEMS
@@ -87,10 +154,12 @@ fun CartScreen() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .shadow(
-                            elevation = 6.dp,
-                            shape = RoundedCornerShape(4.dp)
+                            elevation = 2.dp,
+                            shape = RoundedCornerShape(12.dp),
+                            ambientColor = Color.Black.copy(alpha=0.4f),
+                            spotColor = Color.Black.copy(alpha=0.4f)
                         )
-                        .background(bgWhite, shape = RoundedCornerShape(4.dp))
+                        .background(bgWhite, shape = RoundedCornerShape(12.dp))
                         .padding(16.dp)
                 ) {
                     Row(
@@ -146,24 +215,46 @@ fun CartScreen() {
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 // APPLY COUPON BOX
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .border(1.5.dp, color = koffiBrown.copy(alpha=0.85f), shape = RoundedCornerShape(4.dp), )
-//                        .shadow(
-//                            elevation = 6.dp,
-//                            shape = RoundedCornerShape(4.dp)
-//                        )
-                        .background(bgWhite, shape = RoundedCornerShape(4.dp))
+                        .border(
+                            width = 1.3.dp,
+                            color = koffiBrown,
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .shadow(
+                            elevation = 2.dp,
+                            shape = RoundedCornerShape(12.dp),
+                            ambientColor = Color.Black.copy(alpha=0.4f),
+                            spotColor = Color.Black.copy(alpha=0.4f)
+                        )
+                        .background(bgWhite, shape = RoundedCornerShape(12.dp))
                         .padding(16.dp)
                 ) {
-                    Text(
-                        text = "Apply Coupon"
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Coupons",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Normal,
+                            color = Color.Black
+                        )
+                        Text( // TODO(MAKE CLICKABLE)
+                            text = "Apply",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontStyle = FontStyle.Normal,
+                            color = koffiBrown
+                        )
+                    }
                 }
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 HorizontalDivider(
                     modifier = Modifier.padding(horizontal = 12.dp),
                     thickness = 2.dp,
@@ -177,9 +268,11 @@ fun CartScreen() {
                         //.border(1.5.dp, color = koffiBrown.copy(alpha=0.85f), shape = RoundedCornerShape(4.dp), )
                         .shadow(
                             elevation = 2.dp,
-                            shape = RoundedCornerShape(4.dp)
+                            shape = RoundedCornerShape(12.dp),
+                            ambientColor = Color.Black.copy(alpha=0.4f),
+                            spotColor = Color.Black.copy(alpha=0.4f)
                         )
-                        .background(bgWhite, shape = RoundedCornerShape(4.dp))
+                        .background(bgWhite, shape = RoundedCornerShape(12.dp))
                         .padding(16.dp)
                 ) {
                     Column(
@@ -257,7 +350,78 @@ fun CartScreen() {
                                 color = Color.Black
                             )
                         }
+                        HorizontalDivider(
+                            modifier = Modifier.padding(horizontal = 2.dp, vertical = 4.dp),
+                            thickness = 1.dp,
+                            color = Color.Black.copy(alpha=0.5f)
+                        )
+                        Row( // total amt
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Total:",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontStyle = FontStyle.Normal,
+                                color = Color.Black
+                            )
+                            Text(
+                                text = "Rs. 248.00",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                fontStyle = FontStyle.Normal,
+                                color = Color.Black
+                            )
+                        }
                     }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(imageVector = Icons.Default.Warning, contentDescription = "Cancellation Information")
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = "Cancellation charges apply",
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 16.sp,
+                        fontStyle = FontStyle.Normal
+                    )
+                }
+                Box (
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .padding(horizontal = 40.dp, vertical = 16.dp)
+                        ,
+                        thickness = 2.dp,
+                        color = Color.LightGray.copy(alpha = 0.5f)
+                    )
+                }
+                Column (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 10.dp, top = 6.dp, bottom = 6.dp, end = 4.dp)
+                ) {
+                    Text(
+                        text = "Sip Coffee",
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Cursive,
+                        color = Color.Black,
+                        fontSize = 34.sp
+                    )
+                    Text(
+                        text = "Create Memories",
+                        fontWeight = FontWeight.ExtraBold,
+                        fontFamily = FontFamily.Cursive,
+                        color = Color.Black,
+                        fontSize = 44.sp
+                    )
                 }
             }
         }

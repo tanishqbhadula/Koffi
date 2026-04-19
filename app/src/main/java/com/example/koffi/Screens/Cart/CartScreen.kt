@@ -82,6 +82,7 @@ fun CartScreen() {
                     .padding(horizontal = 8.dp, vertical = 12.dp)
                     .verticalScroll(scrollState)
             ) {
+                // CART ITEMS
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -146,10 +147,11 @@ fun CartScreen() {
                     }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
+                // APPLY COUPON BOX
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .border(2.dp, color = koffiBrown.copy(alpha=0.85f), shape = RoundedCornerShape(4.dp), )
+                        .border(1.5.dp, color = koffiBrown.copy(alpha=0.85f), shape = RoundedCornerShape(4.dp), )
 //                        .shadow(
 //                            elevation = 6.dp,
 //                            shape = RoundedCornerShape(4.dp)
@@ -168,9 +170,95 @@ fun CartScreen() {
                     color = Color.Black.copy(alpha=0.1f)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Bill Details", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, fontStyle = FontStyle.Normal, color = Color.Black
-                )
+                // BILL DETAILS BOX
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        //.border(1.5.dp, color = koffiBrown.copy(alpha=0.85f), shape = RoundedCornerShape(4.dp), )
+                        .shadow(
+                            elevation = 2.dp,
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .background(bgWhite, shape = RoundedCornerShape(4.dp))
+                        .padding(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(2.dp),
+                    ) {
+                        Row( // bill details
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Bill Details:",
+                                fontSize = 17.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontStyle = FontStyle.Normal,
+                                color = Color.Black
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Row( // item total
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Subtotal:",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontStyle = FontStyle.Normal,
+                                color = Color.Black
+                            )
+                            Text(
+                                text = "Rs. 199.00",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                fontStyle = FontStyle.Normal,
+                                color = Color.Black
+                            )
+                        }
+                        Row( // discount
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Discount:",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontStyle = FontStyle.Normal,
+                                color = Color.Black
+                            )
+                            Text(
+                                text = "- Rs. 0.00",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                fontStyle = FontStyle.Normal,
+                                color = Color.Black
+                            )
+                        }
+                        Row( // taxes
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Taxes:",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontStyle = FontStyle.Normal,
+                                color = Color.Black
+                            )
+                            Text(
+                                text = "Rs. 39.00",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                fontStyle = FontStyle.Normal,
+                                color = Color.Black
+                            )
+                        }
+                    }
+                }
             }
         }
     }

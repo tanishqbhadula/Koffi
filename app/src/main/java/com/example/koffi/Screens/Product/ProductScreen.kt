@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -13,6 +14,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,18 +29,23 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.koffi.Navigation.AppNavigation
 import com.example.koffi.Navigation.AppNavigationItem
 import com.example.koffi.R
+import com.example.koffi.Screens.Menu.MenuRoute
 import com.example.koffi.ui.theme.bgWhite
+import com.example.koffi.ui.theme.koffiBrown
 
 //@Preview
 @Composable
 fun ProductScreen(navHostController: NavHostController) {
+//fun ProductScreen() {
     val scrollstate = rememberScrollState()
     Scaffold(
         modifier = Modifier
@@ -55,12 +65,12 @@ fun ProductScreen(navHostController: NavHostController) {
             ) {
                 IconButton(
                     onClick = {
-                        navHostController.navigate(AppNavigationItem.MenuScreen.route) {
+                        //navHostController.navigate(AppNavigationItem.MenuScreen.route) {
 //                            popUpTo(AppNavigationItem.ProductScreen.route) {
 //                                inclusive = true
 //                            }
                             navHostController.popBackStack()
-                        }
+                        //}
                     } //TODO(POP CURR SCREEN AND GO BACK TO EXISTING STATE OF MENU)
 
                 ) {
@@ -122,6 +132,33 @@ fun ProductScreen(navHostController: NavHostController) {
                     fontFamily = FontFamily.Default,
                     color = Color.Black
                 )
+                Spacer(modifier = Modifier.height(18.dp))
+                HorizontalDivider(
+                    thickness = 2.dp,
+                    color = Color.LightGray
+                )
+                Spacer(modifier = Modifier.height(18.dp))
+                Button(
+                    onClick = {
+                        navHostController.navigate(AppNavigationItem.CartScreen.route)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    colors = ButtonColors(
+                        contentColor = bgWhite,
+                        containerColor = koffiBrown,
+                        disabledContentColor = bgWhite,
+                        disabledContainerColor = koffiBrown
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Text(
+                        text = "Add to Cart",
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 16.sp,
+                        fontStyle = FontStyle.Normal
+                    )
+                }
             }
         }
     }

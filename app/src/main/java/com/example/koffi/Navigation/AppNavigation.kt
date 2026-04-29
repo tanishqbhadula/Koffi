@@ -25,8 +25,8 @@ fun AppNavigation(navHostController: NavHostController) {
         composable(AppNavigationItem.ProductScreen.route) {
             ProductScreen(navHostController)
         }
-//        composable(AppNavigationItem.CartScreen.route) {
-//            CartScreen(navHostController)
-//        }
+        composable(AppNavigationItem.CartScreen.route) {
+            CartScreen(navHostController)
+        }
     }
 }

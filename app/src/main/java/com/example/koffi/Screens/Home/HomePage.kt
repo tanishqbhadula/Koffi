@@ -68,6 +68,7 @@ import com.example.koffi.Models.Drink
 import com.example.koffi.Navigation.AppNavigationItem
 import com.example.koffi.R
 import com.example.koffi.Screens.Menu.MenuCategory
+import com.example.koffi.ui.theme.bgCartGray
 import com.example.koffi.ui.theme.bgSpecialGray
 import com.example.koffi.ui.theme.bgWhite
 import com.example.koffi.ui.theme.koffiBrown
@@ -141,9 +142,11 @@ fun HomePage(navHostController: NavHostController) {
             FloatingActionButton(
                 containerColor = koffiBrown,
                 contentColor = bgWhite,
-                onClick = {}
+                onClick = {
+                    navHostController.navigate(AppNavigationItem.MenuScreen.route)
+                }
             ) {
-                Icon(imageVector = Icons.Default.Menu, contentDescription = "profile")
+                Icon(imageVector = Icons.Default.Menu, contentDescription = "menu")
             }
         },
         containerColor = bgWhite,
@@ -183,7 +186,7 @@ fun HomePage(navHostController: NavHostController) {
                 }
                 Spacer(Modifier.weight(1f))
                 IconButton(onClick = {
-                    //navHostController.navigate(AppNavigationItem.CartScreen.route)
+                    navHostController.navigate(AppNavigationItem.CartScreen.route)
                 }) { // CART - SHOPPING CART ICON
                     Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "cart")
                 }
@@ -256,7 +259,7 @@ fun HomePage(navHostController: NavHostController) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .fillMaxHeight(0.1f),
-                            horizontalArrangement = Arrangement.Start
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Image(
                                 painterResource(id = R.drawable.koffi_logo),
@@ -270,7 +273,8 @@ fun HomePage(navHostController: NavHostController) {
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.AccountCircle,
-                                    contentDescription = "profile"
+                                    contentDescription = "profile",
+                                    tint = bgWhite
                                 )
                             }
                         }
@@ -385,7 +389,7 @@ fun HomePage(navHostController: NavHostController) {
                 // FRESH CURATIONS AREA
                 Box (
                     modifier = Modifier
-                        .background(color = bgSpecialGray)
+                        .background(color = bgCartGray)
                         .fillMaxWidth()
                         .padding(start = 6.dp, end = 6.dp, top = 1.dp, bottom = 1.dp)
                 ) {
@@ -398,7 +402,7 @@ fun HomePage(navHostController: NavHostController) {
                         Text(
                             text = "Fresh Curations",
                             fontSize = 22.sp,
-                            color = koffiBrown,
+                            color = Color.Black,
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily.Default
                             //letterSpacing = 2.sp
@@ -552,7 +556,7 @@ fun HomePage(navHostController: NavHostController) {
                         Text(
                             text = "Barista Picks for YOU",
                             fontSize = 20.sp,
-                            color = koffiBrown,
+                            color = Color.Black,
                             fontWeight = FontWeight.ExtraBold,
                             fontFamily = FontFamily.Default
                         )

@@ -38,7 +38,7 @@ fun CheckoutScreen() {
                     .background(bgWhite)
                     .verticalScroll(scrollState)
             ) {
-
+                
             }
         }
     }

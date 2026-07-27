@@ -1,5 +1,8 @@
 package com.example.koffi.Screens.Home
 
+import android.graphics.drawable.Icon
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -50,6 +54,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+//import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -75,6 +81,7 @@ import com.example.koffi.ui.theme.koffiBrown
 import com.example.koffi.ui.theme.navBarWhite
 
 //@Preview
+@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun HomePage(navHostController: NavHostController) {
     val scrollState = rememberScrollState()
@@ -259,14 +266,14 @@ fun HomePage(navHostController: NavHostController) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .fillMaxHeight(0.1f),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            horizontalArrangement = Arrangement.End
                         ) {
-                            Image(
-                                painterResource(id = R.drawable.koffi_logo),
-                                modifier = Modifier.size(50.dp),
-                                contentDescription = "logo"
-                            )
-                            //Spacer(Modifier.fillMaxWidth())
+//                            Image(
+//                                painterResource(id = R.drawable.koffi_logo),
+//                                modifier = Modifier.size(50.dp),
+//                                contentDescription = "logo"
+//                            )
+                            //Spacer(Modifier.weight(1f))
                             IconButton(
                                 modifier = Modifier.fillMaxHeight(),
                                 onClick = {}
@@ -295,7 +302,7 @@ fun HomePage(navHostController: NavHostController) {
                                 //Box(modifier = Modifier.fillMaxWidth()) {
                                 Text(
                                     // TODO -> GREETING ACC TO DEVICE TIME
-                                    text = "Good Morning, username",
+                                    text = "Hi username,",
                                     fontWeight = FontWeight.Bold,
                                     color = bgWhite,
                                     fontSize = 24.sp,
@@ -361,28 +368,63 @@ fun HomePage(navHostController: NavHostController) {
                         .fillMaxWidth()
                         .padding(start = 15.dp, end = 15.dp)
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
-                            .fillMaxWidth()
-                            .fillMaxHeight(0.2f)
-                            .padding(16.dp)
+                    Row(
+                        Modifier.padding(top = 8.dp)
                     ) {
-                        Text(
-                            text = "Card 1"
-                        )
+                        Box(
+                            modifier = Modifier
+                                .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+                                .fillMaxWidth()
+                                .fillMaxHeight(0.2f)
+                                .padding(16.dp)
+                                .weight(1f)
+                        ) {
+                            Text(
+                                text = "Card 1"
+                            )
+                        }
+                        Spacer(Modifier.width(12.dp))
+                        Box(
+                            modifier = Modifier
+                                .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+                                .fillMaxWidth()
+                                .fillMaxHeight(0.2f)
+                                .padding(16.dp)
+                                .weight(1f)
+                        ) {
+                            Text(
+                                text = "Card 2"
+                            )
+                        }
                     }
-                    Spacer(Modifier.height(12.dp))
-                    Box(
-                        modifier = Modifier
-                            .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
-                            .fillMaxWidth()
-                            .fillMaxHeight(0.2f)
-                            .padding(16.dp)
+                    Row(
+                        Modifier.padding(top = 8.dp)
                     ) {
-                        Text(
-                            text = "Card 2"
-                        )
+                        Box(
+                            modifier = Modifier
+                                .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+                                .fillMaxWidth()
+                                .fillMaxHeight(0.2f)
+                                .padding(16.dp)
+                                .weight(1f)
+                        ) {
+                            Text(
+                                text = "Card 1"
+                            )
+                        }
+                        Spacer(Modifier.width(12.dp))
+                        Box(
+                            modifier = Modifier
+                                .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+                                .fillMaxWidth()
+                                .fillMaxHeight(0.2f)
+                                .padding(16.dp)
+                                .weight(1f)
+                        ) {
+                            Text(
+                                text = "Card 2"
+                            )
+                        }
                     }
                 }
                 Spacer(Modifier.height(12.dp)) 
@@ -391,7 +433,7 @@ fun HomePage(navHostController: NavHostController) {
                     modifier = Modifier
                         .background(color = bgCartGray)
                         .fillMaxWidth()
-                        .padding(start = 6.dp, end = 6.dp, top = 1.dp, bottom = 1.dp)
+                        .padding(start = 6.dp, end = 6.dp, top = 6.dp, bottom = 6.dp)
                 ) {
                     Column (
                         modifier = Modifier
@@ -572,10 +614,12 @@ fun HomePage(navHostController: NavHostController) {
                                         modifier = Modifier
                                             .size(100.dp)
                                             .padding(vertical = 16.dp, horizontal = 6.dp)
+
                                         ,
                                         shape = RoundedCornerShape(12.dp),
                                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                                        colors = CardDefaults.cardColors(containerColor = Color.LightGray)
+                                        colors = CardDefaults.cardColors(containerColor = Color.LightGray),
+
                                     ) {
                                         displayPicks(picks = picks)
                                     }
@@ -642,6 +686,7 @@ fun HomePage(navHostController: NavHostController) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun koffiSearchBar(
     text: String,
@@ -710,7 +755,8 @@ fun displayPicks(picks : Drink) {
             .padding(vertical = 5.dp)
     ) {
         Column (
-            modifier = Modifier.fillMaxHeight()
+            modifier = Modifier.fillMaxHeight(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
                 painterResource(id = R.drawable.koffi_logo),

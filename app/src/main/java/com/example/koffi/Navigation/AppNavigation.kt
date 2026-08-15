@@ -8,6 +8,8 @@ import com.example.koffi.Screens.Cart.CartScreen
 import com.example.koffi.Screens.Home.HomePage
 import com.example.koffi.Screens.Menu.MenuScreen
 import com.example.koffi.Screens.Product.ProductScreen
+import com.example.koffi.Screens.SignUp.RegisterScreen
+import com.example.koffi.Screens.SignUp.SignInScreen
 import com.example.koffi.Screens.Splash.SplashScreen
 
 @Composable
@@ -27,6 +29,12 @@ fun AppNavigation(navHostController: NavHostController) {
         }
         composable(AppNavigationItem.CartScreen.route) {
             CartScreen(navHostController)
+        }
+        composable(AppNavigationItem.SignUpScreen.route) {
+            RegisterScreen(navHostController)
+        }
+        composable(AppNavigationItem.SignInScreen.route) {
+            SignInScreen(navHostController)
         }
     }
 }

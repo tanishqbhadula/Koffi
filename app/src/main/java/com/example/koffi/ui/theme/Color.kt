@@ -19,3 +19,5 @@ val bgSpecialGray = Color(0xFFEBECF5);
 
 //val bgCartGray = Color(0xFFf7f7f7);
 val bgCartGray = Color(0xFFe6e6e8);
+
+val lightgray = Color(0xFFE4E4E4)

@@ -6,4 +6,6 @@ sealed class AppNavigationItem(val route: String) {
     object MenuScreen: AppNavigationItem(route = "menu")
     object ProductScreen: AppNavigationItem(route = "product_screen")
     object CartScreen: AppNavigationItem(route = "cart_screen")
+    object SignUpScreen: AppNavigationItem(route = "signup_screen")
+    object SignInScreen: AppNavigationItem(route = "signin_screen")
 }

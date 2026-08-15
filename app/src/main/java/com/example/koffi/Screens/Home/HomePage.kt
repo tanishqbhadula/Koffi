@@ -1,5 +1,6 @@
 package com.example.koffi.Screens.Home
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Icon
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsEndWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -58,6 +60,7 @@ import androidx.compose.ui.Alignment
 //import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.DefaultShadowColor
 import androidx.compose.ui.graphics.RectangleShape
@@ -70,6 +73,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.koffi.Models.Drink
 import com.example.koffi.Navigation.AppNavigationItem
 import com.example.koffi.R
@@ -78,9 +82,12 @@ import com.example.koffi.ui.theme.bgCartGray
 import com.example.koffi.ui.theme.bgSpecialGray
 import com.example.koffi.ui.theme.bgWhite
 import com.example.koffi.ui.theme.koffiBrown
+import com.example.koffi.ui.theme.lightgray
 import com.example.koffi.ui.theme.navBarWhite
+import com.example.koffi.widgets.FloatingNavBar.FloatingBottomBar
 
 //@Preview
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun HomePage(navHostController: NavHostController) {
@@ -144,66 +151,16 @@ fun HomePage(navHostController: NavHostController) {
             isPopular= false
         )
     )
+    val currentBackStackEntry by navHostController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry?.destination?.route
     Scaffold (
-        floatingActionButton = {
-            FloatingActionButton(
-                containerColor = koffiBrown,
-                contentColor = bgWhite,
-                onClick = {
-                    navHostController.navigate(AppNavigationItem.MenuScreen.route)
-                }
-            ) {
-                Icon(imageVector = Icons.Default.Menu, contentDescription = "menu")
-            }
-        },
         containerColor = bgWhite,
         modifier = Modifier.fillMaxSize(),
-        bottomBar = {
-            BottomAppBar (
-                modifier = Modifier
-                    .shadow(
-                        elevation = 10.dp,
-                        shape = RectangleShape,
-                        ambientColor = DefaultShadowColor,
-                        spotColor = DefaultShadowColor
-                    )
-                    .fillMaxWidth(),
-                containerColor = navBarWhite,
-                contentColor = Color.Black,
-                tonalElevation = BottomAppBarDefaults.ContainerElevation
-            ) {
-                // TODO -> HIGHLIGHT WHICHEVER TAB IS CURRENTLY OPEN
-                IconButton(onClick = {}) { // HOME - HOME ICON
-                    Icon(imageVector = Icons.Default.Home, contentDescription = "home")
-                }
-                Spacer(Modifier.weight(1f))
-                IconButton(onClick = {}) { // OFFERS - SMILE FACE
-                    Icon(imageVector = Icons.Default.Face, contentDescription = "offers")
-                }
-                Spacer(Modifier.weight(1f))
-                IconButton( // ORDER - CIRCLE PLUS ICON
-                    onClick = { },
-                    colors = IconButtonDefaults.iconButtonColors(containerColor = koffiBrown, contentColor = bgWhite, disabledContentColor = koffiBrown, disabledContainerColor = bgWhite)
-                ) {
-                    Icon(imageVector = Icons.Default.AddCircle, contentDescription = "order")
-                }
-                Spacer(Modifier.weight(1f))
-                IconButton(onClick = {}) { // FAVORITES - STAR ICON
-                    Icon(imageVector = Icons.Default.Star, contentDescription = "favs")
-                }
-                Spacer(Modifier.weight(1f))
-                IconButton(onClick = {
-                    navHostController.navigate(AppNavigationItem.CartScreen.route)
-                }) { // CART - SHOPPING CART ICON
-                    Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "cart")
-                }
-            }
-        }
-    ){
-        innerPadding ->
+    ) {
+        //innerPadding ->
         Box(
             modifier = Modifier
-                .padding(innerPadding)
+                //.padding(innerPadding)
                 .background(bgWhite)
                 .fillMaxSize()
         ) {
@@ -226,10 +183,11 @@ fun HomePage(navHostController: NavHostController) {
 //            }
             Column (
                 modifier = Modifier
-                    //.padding(start = 15.dp, end = 15.dp)
+                    //.padding(top = 16.dp, bottom = 16.dp, start = 12.dp, end = 12.dp)
                     .fillMaxSize()
                     .background(Color.Transparent)
-                    .verticalScroll(scrollState)
+                    .verticalScroll(scrollState),
+                //verticalArrangement = Arrangement.Bottom
             ) {
 
                 // -- <TEST> -- [NOW FINAL]
@@ -237,6 +195,7 @@ fun HomePage(navHostController: NavHostController) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
+                        //.padding(top = 16.dp, bottom = 16.dp, start = 12.dp, end = 12.dp)
                 ) {
                     Box( // brown bg
                         modifier = Modifier
@@ -262,6 +221,7 @@ fun HomePage(navHostController: NavHostController) {
                             .background(color = Color.Transparent)
                             .padding(start = 2.dp, end = 2.dp, top = 4.dp, bottom = 12.dp)
                     ) {
+                        Spacer(modifier = Modifier.height(20.dp))
                         Row( // ICON + PROFILE ICON ROW
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -275,17 +235,18 @@ fun HomePage(navHostController: NavHostController) {
 //                            )
                             //Spacer(Modifier.weight(1f))
                             IconButton(
-                                modifier = Modifier.fillMaxHeight(),
+                                //modifier = Modifier.fillMaxHeight(),
                                 onClick = {}
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.AccountCircle,
                                     contentDescription = "profile",
-                                    tint = bgWhite
+                                    tint = bgWhite,
+                                    modifier = Modifier.size(35.dp)
                                 )
                             }
                         }
-                        Spacer(Modifier.height(10.dp))
+                        Spacer(Modifier.height(2.dp))
                         // greeting + quote
                         // TODO -> FIGURE OUT CENTRE ALIGN TEXT PROB
                         Row(
@@ -362,18 +323,18 @@ fun HomePage(navHostController: NavHostController) {
                         fontSize = 22.sp
                     )
                 }
-                Spacer(Modifier.height(4.dp))
+                Spacer(Modifier.height(1.dp))
                 Column (
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 15.dp, end = 15.dp)
                 ) {
                     Row(
-                        Modifier.padding(top = 8.dp)
+                        Modifier.padding(top = 4.dp)
                     ) {
                         Box(
                             modifier = Modifier
-                                .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+                                .background(lightgray, shape = RoundedCornerShape(10.dp))
                                 .fillMaxWidth()
                                 .fillMaxHeight(0.2f)
                                 .padding(16.dp)
@@ -386,7 +347,7 @@ fun HomePage(navHostController: NavHostController) {
                         Spacer(Modifier.width(12.dp))
                         Box(
                             modifier = Modifier
-                                .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+                                .background(lightgray, shape = RoundedCornerShape(10.dp))
                                 .fillMaxWidth()
                                 .fillMaxHeight(0.2f)
                                 .padding(16.dp)
@@ -402,7 +363,7 @@ fun HomePage(navHostController: NavHostController) {
                     ) {
                         Box(
                             modifier = Modifier
-                                .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+                                .background(lightgray, shape = RoundedCornerShape(10.dp))
                                 .fillMaxWidth()
                                 .fillMaxHeight(0.2f)
                                 .padding(16.dp)
@@ -415,7 +376,7 @@ fun HomePage(navHostController: NavHostController) {
                         Spacer(Modifier.width(12.dp))
                         Box(
                             modifier = Modifier
-                                .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+                                .background(lightgray, shape = RoundedCornerShape(10.dp))
                                 .fillMaxWidth()
                                 .fillMaxHeight(0.2f)
                                 .padding(16.dp)
@@ -427,14 +388,14 @@ fun HomePage(navHostController: NavHostController) {
                         }
                     }
                 }
-                Spacer(Modifier.height(12.dp)) 
+                Spacer(Modifier.height(20.dp))
                 // FRESH CURATIONS AREA
                 Box (
                     modifier = Modifier
-                        .background(color = bgCartGray)
+                        .background(color = lightgray)
                         .fillMaxWidth()
-                        .padding(start = 6.dp, end = 6.dp, top = 6.dp, bottom = 6.dp)
-                ) {
+                        .padding(start = 12.dp, end = 12.dp, top = 6.dp, bottom = 6.dp)
+                )  {
                     Column (
                         modifier = Modifier
                             .background(Color.Transparent)
@@ -449,7 +410,7 @@ fun HomePage(navHostController: NavHostController) {
                             fontFamily = FontFamily.Default
                             //letterSpacing = 2.sp
                         )
-                        Spacer(Modifier.height(2.dp))
+                        Spacer(Modifier.height(4.dp))
                         // 3X2 GRID
                         Row ( // ROW 1 -> bold brews, bestsellers, drinks
                             modifier = Modifier
@@ -594,7 +555,9 @@ fun HomePage(navHostController: NavHostController) {
                     Column (
                         modifier = Modifier
                             .fillMaxWidth()
+                            .padding(horizontal = 10.dp)
                     ) {
+                        Spacer(Modifier.height(4.dp))
                         Text(
                             text = "Barista Picks for YOU",
                             fontSize = 20.sp,
@@ -602,10 +565,11 @@ fun HomePage(navHostController: NavHostController) {
                             fontWeight = FontWeight.ExtraBold,
                             fontFamily = FontFamily.Default
                         )
+                        //Spacer(modifier = Modifier.height(6.dp))
                         LazyRow (
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(vertical = 6.dp)
+                                .padding(vertical = 2.dp)
                         ) {
                             items(baristaPicks) { picks ->
                                 if(picks.isRecommended) {
@@ -618,7 +582,7 @@ fun HomePage(navHostController: NavHostController) {
                                         ,
                                         shape = RoundedCornerShape(12.dp),
                                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                                        colors = CardDefaults.cardColors(containerColor = Color.LightGray),
+                                        colors = CardDefaults.cardColors(containerColor = lightgray),
 
                                     ) {
                                         displayPicks(picks = picks)
@@ -631,7 +595,7 @@ fun HomePage(navHostController: NavHostController) {
                 Box (
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)
+                        .padding(start = 16.dp, end = 16.dp, top = 1.dp, bottom = 4.dp)
                 ) {
                     Button(
                         onClick = {
@@ -681,7 +645,29 @@ fun HomePage(navHostController: NavHostController) {
                         fontSize = 44.sp
                     )
                 }
+                Spacer(modifier = Modifier.height(100.dp))
             }
+            //Spacer(modifier = Modifier.fillMaxHeight())
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(70.dp)
+                    .align(Alignment.BottomCenter)
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.35f),
+                                Color.Black.copy(alpha = 0.45f),
+                                Color.Black.copy(alpha = 0.65f),
+                            )
+                        )
+                    )
+            )
+            FloatingBottomBar(
+                navHostController = navHostController,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
         }
     }
 }

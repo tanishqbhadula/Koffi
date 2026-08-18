@@ -194,7 +194,7 @@ fun MenuScreen(navHostController: NavHostController) {
                                 )
                             }
                             Text(
-                                text = "our MENU",
+                                text = "Menu",
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 12.dp),
                                 fontSize = 22.sp,
                                 color = bgWhite,

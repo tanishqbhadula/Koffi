@@ -11,6 +11,7 @@ composeBom = "2024.09.00"
 material3 = "1.4.0"
 material3Z = "1.4.0-rc01"
 navigationRuntimeKtx = "2.9.8"
+roomDatabase = "2.7.2"
 
 [libraries]
 androidx-compose-material3-z = { module = "androidx.compose.material3:material3-*", version.ref = "material3Z" }
@@ -31,8 +32,13 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 
+room = { module = "androidx.room:room-runtime", version.ref = "roomDatabase" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomDatabase" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomDatabase" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
+ksp = { id = "com.google.devtools.ksp", version = "2.0.21-1.0.28" }

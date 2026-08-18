@@ -5,7 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
+import com.example.koffi.Database.AppDatabase
 import com.example.koffi.Navigation.AppNavigation
+import com.example.koffi.Repository.AuthRepository
 import com.example.koffi.Screens.Cart.CartScreen
 
 class MainActivity : ComponentActivity() {
@@ -14,6 +16,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             //CartScreen(navHostController)
+            val database = AppDatabase.getDatabase(applicationContext)
+
+            val authRepository = AuthRepository(
+                database.userDao()
+            )
             val navHostController = rememberNavController()
             AppNavigation(navHostController)
         }

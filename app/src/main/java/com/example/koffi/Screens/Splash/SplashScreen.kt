@@ -42,7 +42,7 @@ fun SplashScreen(navHostController: NavHostController) {
     }
     LaunchedEffect(Unit) {
         delay(2500)
-        navHostController.navigate(AppNavigationItem.HomeScreen.route) {
+        navHostController.navigate(AppNavigationItem.SignUpScreen.route) {
             popUpTo(AppNavigationItem.SplashScreen.route) {
                 inclusive = true
             }

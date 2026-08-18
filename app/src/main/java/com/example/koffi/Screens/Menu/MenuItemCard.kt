@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.example.koffi.Models.Drink
 import com.example.koffi.R
 import com.example.koffi.ui.theme.bgSpecialGray
+import com.example.koffi.ui.theme.lightgray
 
 @Composable
 fun MenuItemCard(
@@ -44,7 +45,7 @@ fun MenuItemCard(
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(
             contentColor = Color.Black,
-            containerColor = bgSpecialGray
+            containerColor = lightgray
         ),
         elevation = CardDefaults.cardElevation(6.dp)
     ) {

@@ -44,8 +44,13 @@ import com.example.koffi.Navigation.AppNavigationItem
 //import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
+import com.example.koffi.Database.AppDatabase
+import com.example.koffi.Repository.AuthRepository
+import com.example.koffi.Repository.AuthViewModelFactory
 import com.example.koffi.ui.theme.bgCartGray
 import com.example.koffi.ui.theme.bgSpecialGray
 import com.example.koffi.ui.theme.bgWhite
@@ -54,9 +59,25 @@ import com.example.koffi.ui.theme.lightgray
 @Composable
 fun RegisterScreen(
     navHostController: NavHostController,
-    viewModel: SignUpViewModel = viewModel()
+    //viewModel: SignUpViewModel = viewModel()
 ) {
+    val context = LocalContext.current
 
+    val database = remember {
+        AppDatabase.getDatabase(context)
+    }
+
+    val repository = remember {
+        AuthRepository(database.userDao())
+    }
+
+    val factory = remember {
+        AuthViewModelFactory(repository)
+    }
+
+    val viewModel: SignUpViewModel = viewModel(
+        factory = factory
+    )
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
@@ -295,23 +316,25 @@ fun RegisterScreen(
                 // Register button
                 Button(
                     onClick = {
-                        navHostController.navigate(
-                            AppNavigationItem.HomeScreen.route
-                        ) {
-                            popUpTo(AppNavigationItem.SignUpScreen.route) {
-                                inclusive = true
+                        viewModel.registerUser {
+
+                            navHostController.navigate(
+                                AppNavigationItem.HomeScreen.route
+                            ) {
+                                popUpTo(
+                                    AppNavigationItem.SignUpScreen.route
+                                ) {
+                                    inclusive = true
+                                }
                             }
                         }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(54.dp),
-                    enabled = viewModel.canRegister()
+                    enabled = !uiState.isLoading && viewModel.canRegister()
                 ) {
-                    Text(
-                        text = "Register",
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                    Text("Register")
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))

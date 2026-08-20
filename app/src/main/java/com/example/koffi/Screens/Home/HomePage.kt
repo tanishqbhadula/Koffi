@@ -72,6 +72,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.koffi.Models.Drink
@@ -90,8 +91,12 @@ import com.example.koffi.widgets.FloatingNavBar.FloatingBottomBar
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.M)
 @Composable
-fun HomePage(navHostController: NavHostController) {
+fun HomePage(
+    navHostController: NavHostController,
+    viewModel: HomeViewModel = viewModel()
+) {
     val scrollState = rememberScrollState()
+    val uiState by viewModel.uiState.collectAsState()
     // PROFILE ICON NOT A PART OF SCAFFOLD, ADD IT AS A PART OF ROW MOST ROW WITH APP LOGO(OPTIONAL MAYBE IDK) AS WE DONT WANT TO BE FIXED
     var searchBarText by remember { mutableStateOf("") }
     var searchBarActive by remember { mutableStateOf(false) }
@@ -263,7 +268,7 @@ fun HomePage(navHostController: NavHostController) {
                                 //Box(modifier = Modifier.fillMaxWidth()) {
                                 Text(
                                     // TODO -> GREETING ACC TO DEVICE TIME
-                                    text = "Hi username,",
+                                    text = "Hi ${uiState.userName},",
                                     fontWeight = FontWeight.Bold,
                                     color = bgWhite,
                                     fontSize = 24.sp,

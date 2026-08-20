@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.example.koffi.Repository.Auth.SessionManager
 
 class SignInViewModel(
     private val repository: AuthRepository
@@ -48,7 +49,6 @@ class SignInViewModel(
 
         val state = _uiState.value
 
-        // Extra validation
         if (!canSignIn()) {
 
             _uiState.update {
@@ -76,7 +76,8 @@ class SignInViewModel(
 
             if (user != null) {
 
-                // Login successful
+                // Save currently logged-in user
+                SessionManager.login(user)
 
                 _uiState.update {
                     it.copy(
@@ -87,8 +88,6 @@ class SignInViewModel(
                 onSuccess()
 
             } else {
-
-                // Login failed
 
                 _uiState.update {
                     it.copy(

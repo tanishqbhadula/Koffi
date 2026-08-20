@@ -49,8 +49,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import com.example.koffi.Database.AppDatabase
-import com.example.koffi.Repository.AuthRepository
-import com.example.koffi.Repository.AuthViewModelFactory
+import com.example.koffi.Repository.Auth.AuthRepository
+import com.example.koffi.Repository.Auth.AuthViewModelFactory
 import com.example.koffi.ui.theme.bgCartGray
 import com.example.koffi.ui.theme.bgSpecialGray
 import com.example.koffi.ui.theme.bgWhite

@@ -1,8 +1,7 @@
-package com.example.koffi.Repository
+package com.example.koffi.Repository.Auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.koffi.Repository.AuthRepository
 import com.example.koffi.Screens.SignUp.SignInViewModel
 import com.example.koffi.Screens.SignUp.SignUpViewModel
 

@@ -1,7 +1,7 @@
-package com.example.koffi.Repository
+package com.example.koffi.Repository.Auth
 
-import com.example.koffi.Database.UserDao
-import com.example.koffi.Database.UserEntity
+import com.example.koffi.Database.User.UserDao
+import com.example.koffi.Database.User.UserEntity
 import com.example.koffi.widgets.PasswordHasher
 
 class AuthRepository(

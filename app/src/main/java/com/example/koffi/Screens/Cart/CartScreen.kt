@@ -41,6 +41,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.DefaultShadowColor
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -48,7 +49,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.koffi.Database.AppDatabase
+import com.example.koffi.Navigation.AppNavigationItem
+import com.example.koffi.Repository.Cart.CartRepository
+import com.example.koffi.Repository.Cart.CartViewModelFactory
 import com.example.koffi.ui.theme.bgCartGray
 import com.example.koffi.ui.theme.bgWhite
 import com.example.koffi.ui.theme.koffiBrown
@@ -56,366 +62,483 @@ import com.example.koffi.ui.theme.koffiBrown
 //@Preview
 @Composable
 fun CartScreen(navHostController: NavHostController) {
+    val context = LocalContext.current
+    val database = remember {
+        AppDatabase.getDatabase(context)
+    }
+    val repository = remember {
+        CartRepository(database.cartDao())
+    }
+    val factory = remember {
+        CartViewModelFactory(repository)
+    }
+    val viewModel: CartViewModel = viewModel(
+        factory = factory
+    )
+    val cartItems by viewModel.cartItems.collectAsState()
+    val subtotal = viewModel.getSubtotal(cartItems)
+    val taxes = 39.00
+    val itemCount = viewModel.getItemCount(cartItems)
     val scrollState = rememberScrollState()
-    var qtyCount by remember { mutableIntStateOf(1) }
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(bgCartGray),
-        topBar = {
-            cartScreenTopAppBar(
-                title = "Cart",
-                onBackClick = {
-                    navHostController.popBackStack()
-                }
-            )
-        },
-        bottomBar = {
-            BottomAppBar(
-                modifier = Modifier
-                    .shadow(
-                        elevation = 4.dp,
-                        shape = RectangleShape,
-                        ambientColor = DefaultShadowColor,
-                        spotColor = DefaultShadowColor
-                    )
-                    .fillMaxWidth(),
-                containerColor = bgWhite,
-                contentColor = Color.Black,
-                tonalElevation = BottomAppBarDefaults.ContainerElevation
-            ) {
-                Row(
+    //var qtyCount by remember { mutableIntStateOf(1) }
+
+    if (cartItems.isEmpty()) {
+        EmptyCartContent(
+            onBrowseMenu = {
+                navHostController.navigate(AppNavigationItem.MenuScreen.route)
+            }
+        )
+    } else {
+        Scaffold(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(bgCartGray),
+            topBar = {
+                cartScreenTopAppBar(
+                    title = "Cart",
+                    onBackClick = {
+                        navHostController.popBackStack()
+                    }
+                )
+            },
+            bottomBar = {
+                BottomAppBar(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp, horizontal = 6.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
-                        modifier = Modifier.padding(4.dp),
-                        horizontalAlignment = Alignment.Start,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "1 Item",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal,
-                            color = Color.Black
+                        .shadow(
+                            elevation = 4.dp,
+                            shape = RectangleShape,
+                            ambientColor = DefaultShadowColor,
+                            spotColor = DefaultShadowColor
                         )
-                        Text(
-                            text = "Rs. 248.00",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            fontStyle = FontStyle.Normal,
-                            color = Color.Black
+                        .fillMaxWidth(),
+                    containerColor = bgWhite,
+                    contentColor = Color.Black,
+                    tonalElevation = BottomAppBarDefaults.ContainerElevation
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp, horizontal = 6.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(4.dp),
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "$itemCount ${if (itemCount == 1) "Item" else "Items"}",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontStyle = FontStyle.Normal,
+                                color = Color.Black
+                            )
+                            Text(
+                                text = "Rs. %.2f".format(subtotal),
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                fontStyle = FontStyle.Normal,
+                                color = Color.Black
+                            )
+                        }
+                        Button(
+                            onClick = {},
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = koffiBrown,
+                                contentColor = bgWhite
+                            )
+                        ) {
+                            Text(
+                                text = "Place Order"
+                            )
+                        }
+                    }
+                }
+            }
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .background(bgCartGray)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(bgCartGray)
+                        .padding(horizontal = 12.dp, vertical = 14.dp)
+                        .verticalScroll(scrollState)
+                ) {
+                    // CART ITEMS
+                    cartItems.forEach { item ->
+                        CartItemCard(
+                            item = item,
+                            onIncrease = {
+                                viewModel.increaseQuantity(item)
+                            },
+                            onDecrease = {
+                                viewModel.decreaseQuantity(item)
+                            },
+                            onRemove = {
+                                viewModel.removeItem(item)
+                            }
+                        )
+                        Spacer(
+                            modifier = Modifier.height(12.dp)
                         )
                     }
-                    Button(
-                        onClick = {},
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = koffiBrown,
-                            contentColor = bgWhite
+//                    Box(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .shadow(
+//                                elevation = 2.dp,
+//                                shape = RoundedCornerShape(12.dp),
+//                                ambientColor = Color.Black.copy(alpha = 0.4f),
+//                                spotColor = Color.Black.copy(alpha = 0.4f)
+//                            )
+//                            .background(bgWhite, shape = RoundedCornerShape(12.dp))
+//                            .padding(16.dp)
+//                    ) {
+//                        Row(
+//                            verticalAlignment = Alignment.CenterVertically,
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .padding(6.dp)
+//                        ) {
+//                            // DRINK DETAILS
+//                            Column (
+//                                //horizontalAlignment = Alignment.CenterHorizontally,
+//                                modifier = Modifier
+//                                    .padding(2.dp)
+//                                    .weight(0.33f)
+//                            ) {
+//                                Text( // NAME
+//                                    text = "Classic Americano",
+//                                    fontSize = 16.sp,
+//                                    fontWeight = FontWeight.SemiBold,
+//                                    textAlign = TextAlign.Start
+//                                )
+//                                Spacer(modifier = Modifier.height(4.dp))
+//                                Text( // SIZE
+//                                    text = "(SMALL)",
+//                                    fontSize = 12.sp,
+//                                    fontWeight = FontWeight.Normal,
+//                                    textAlign = TextAlign.Center
+//                                )
+//                            }
+//                            Column(
+//                                modifier = Modifier
+//                                    .fillMaxSize()
+//                                    .background(bgCartGray)
+//                                    .padding(horizontal = 12.dp, vertical = 14.dp)
+//                                //.verticalScroll(scrollState)
+//                            ) {
+//                                cartItems.forEach { item ->
+//                                    CartItemCard(
+//                                        item = item,
+//                                        onIncrease = {
+//                                            viewModel.increaseQuantity(item)
+//                                        },
+//                                        onDecrease = {
+//                                            viewModel.decreaseQuantity(item)
+//                                        },
+//                                        onRemove = {
+//                                            viewModel.removeItem(item)
+//                                        }
+//                                    )
+//
+//                                    Spacer(modifier = Modifier.height(16.dp))
+//                                }
+//
+//                            }
+//                            // QTY SELECTOR
+//                            Box(
+//                                modifier = Modifier
+//                                    .padding(6.dp)
+//                                    .weight(0.25f)
+//                            ) {
+//    //                            quantitySelector(
+//    //                                qty = qtyCount,
+//    //                                onQtyChange = {
+//    //                                    newCount -> qtyCount = newCount
+//    //                                }
+//    //                            )
+//                            }
+//                            // PRICE
+//                            Box(
+//                                modifier = Modifier
+//                                    .padding(6.dp)
+//                            ) {
+//                                Text(
+//                                    text = "Rs. %.2f".format(subtotal), // TODO(ADD PRICE OF DRINK PASSED FROM TAKEN STATE)
+//                                    fontSize = 16.sp,
+//                                    fontWeight = FontWeight.SemiBold
+//                                )
+//                            }
+//                        }
+//                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    // APPLY COUPON BOX
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(
+                                width = 1.3.dp,
+                                color = koffiBrown,
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                            .shadow(
+                                elevation = 2.dp,
+                                shape = RoundedCornerShape(12.dp),
+                                ambientColor = Color.Black.copy(alpha = 0.4f),
+                                spotColor = Color.Black.copy(alpha = 0.4f)
+                            )
+                            .background(bgWhite, shape = RoundedCornerShape(12.dp))
+                            .padding(16.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Coupons",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontStyle = FontStyle.Normal,
+                                color = Color.Black
+                            )
+                            Text( // TODO(MAKE CLICKABLE)
+                                text = "Apply",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontStyle = FontStyle.Normal,
+                                color = koffiBrown
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                        thickness = 2.dp,
+                        color = Color.Black.copy(alpha = 0.1f)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    // BILL DETAILS BOX
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            //.border(1.5.dp, color = koffiBrown.copy(alpha=0.85f), shape = RoundedCornerShape(4.dp), )
+                            .shadow(
+                                elevation = 2.dp,
+                                shape = RoundedCornerShape(12.dp),
+                                ambientColor = Color.Black.copy(alpha = 0.4f),
+                                spotColor = Color.Black.copy(alpha = 0.4f)
+                            )
+                            .background(bgWhite, shape = RoundedCornerShape(12.dp))
+                            .padding(16.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(2.dp),
+                        ) {
+                            Row( // bill details
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "Bill Details:",
+                                    fontSize = 17.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontStyle = FontStyle.Normal,
+                                    color = Color.Black
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Row( // item total
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "Subtotal:",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    color = Color.Black
+                                )
+                                Text(
+                                    text = "Rs. %.2f".format(subtotal),
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontStyle = FontStyle.Normal,
+                                    color = Color.Black
+                                )
+                            }
+                            Row( // discount
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "Discount:",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    color = Color.Black
+                                )
+                                Text(
+                                    text = "- Rs. 0.00",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontStyle = FontStyle.Normal,
+                                    color = Color.Black
+                                )
+                            }
+                            Row( // taxes
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "Taxes:",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    color = Color.Black
+                                )
+                                Text(
+                                    text = "Rs. %.2f".format(taxes),
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontStyle = FontStyle.Normal,
+                                    color = Color.Black
+                                )
+                            }
+                            HorizontalDivider(
+                                modifier = Modifier.padding(horizontal = 2.dp, vertical = 4.dp),
+                                thickness = 1.dp,
+                                color = Color.Black.copy(alpha = 0.5f)
+                            )
+                            Row( // total amt
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "Total:",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    color = Color.Black
+                                )
+                                Text(
+                                    text = "Rs. %.2f".format(subtotal+taxes),
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontStyle = FontStyle.Normal,
+                                    color = Color.Black
+                                )
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Warning,
+                            contentDescription = "Cancellation Information"
                         )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "Cancellation charges apply",
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 16.sp,
+                            fontStyle = FontStyle.Normal
+                        )
+                    }
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        HorizontalDivider(
+                            modifier = Modifier
+                                .padding(horizontal = 40.dp, vertical = 16.dp),
+                            thickness = 2.dp,
+                            color = Color.LightGray.copy(alpha = 0.5f)
+                        )
+                    }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 10.dp, top = 6.dp, bottom = 6.dp, end = 4.dp)
                     ) {
                         Text(
-                            text = "Place Order"
+                            text = "Sip Coffee",
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.Cursive,
+                            color = Color.Black,
+                            fontSize = 34.sp
+                        )
+                        Text(
+                            text = "Create Memories",
+                            fontWeight = FontWeight.ExtraBold,
+                            fontFamily = FontFamily.Cursive,
+                            color = Color.Black,
+                            fontSize = 44.sp
                         )
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun EmptyCartContent(
+    onBrowseMenu: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(bgCartGray)
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        innerPadding ->
-        Box(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .background(bgCartGray)
+
+        Text(
+            text = "Your cart is empty",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
+
+        Spacer(
+            modifier = Modifier.height(8.dp)
+        )
+
+        Text(
+            text = "Looks like you haven't added any coffee yet.",
+            fontSize = 15.sp,
+            textAlign = TextAlign.Center,
+            color = Color.DarkGray
+        )
+
+        Spacer(
+            modifier = Modifier.height(24.dp)
+        )
+
+        Button(
+            onClick = onBrowseMenu,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = koffiBrown,
+                contentColor = bgWhite
+            ),
+            shape = RoundedCornerShape(10.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(bgCartGray)
-                    .padding(horizontal = 12.dp, vertical = 14.dp)
-                    .verticalScroll(scrollState)
-            ) {
-                // CART ITEMS
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .shadow(
-                            elevation = 2.dp,
-                            shape = RoundedCornerShape(12.dp),
-                            ambientColor = Color.Black.copy(alpha=0.4f),
-                            spotColor = Color.Black.copy(alpha=0.4f)
-                        )
-                        .background(bgWhite, shape = RoundedCornerShape(12.dp))
-                        .padding(16.dp)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(6.dp)
-                    ) {
-                        // DRINK DETAILS
-                        Column (
-                            //horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .padding(2.dp)
-                                .weight(0.33f)
-                        ) {
-                            Text( // NAME
-                                text = "Classic Americano",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                textAlign = TextAlign.Start
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text( // SIZE
-                                text = "(SMALL)",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Normal,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                        // QTY SELECTOR
-                        Box(
-                            modifier = Modifier
-                                .padding(6.dp)
-                                .weight(0.25f)
-                        ) {
-                            quantitySelector(
-                                qty = qtyCount,
-                                onQtyChange = {
-                                    newCount -> qtyCount = newCount
-                                }
-                            )
-                        }
-                        // PRICE
-                        Box(
-                            modifier = Modifier
-                                .padding(6.dp)
-                        ) {
-                            Text(
-                                text = "199.00", // TODO(ADD PRICE OF DRINK PASSED FROM TAKEN STATE)
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-                    }
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                // APPLY COUPON BOX
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .border(
-                            width = 1.3.dp,
-                            color = koffiBrown,
-                            shape = RoundedCornerShape(12.dp)
-                        )
-                        .shadow(
-                            elevation = 2.dp,
-                            shape = RoundedCornerShape(12.dp),
-                            ambientColor = Color.Black.copy(alpha=0.4f),
-                            spotColor = Color.Black.copy(alpha=0.4f)
-                        )
-                        .background(bgWhite, shape = RoundedCornerShape(12.dp))
-                        .padding(16.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = "Coupons",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal,
-                            color = Color.Black
-                        )
-                        Text( // TODO(MAKE CLICKABLE)
-                            text = "Apply",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontStyle = FontStyle.Normal,
-                            color = koffiBrown
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 12.dp),
-                    thickness = 2.dp,
-                    color = Color.Black.copy(alpha=0.1f)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                // BILL DETAILS BOX
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        //.border(1.5.dp, color = koffiBrown.copy(alpha=0.85f), shape = RoundedCornerShape(4.dp), )
-                        .shadow(
-                            elevation = 2.dp,
-                            shape = RoundedCornerShape(12.dp),
-                            ambientColor = Color.Black.copy(alpha=0.4f),
-                            spotColor = Color.Black.copy(alpha=0.4f)
-                        )
-                        .background(bgWhite, shape = RoundedCornerShape(12.dp))
-                        .padding(16.dp)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(2.dp),
-                    ) {
-                        Row( // bill details
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "Bill Details:",
-                                fontSize = 17.sp,
-                                fontWeight = FontWeight.Bold,
-                                fontStyle = FontStyle.Normal,
-                                color = Color.Black
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Row( // item total
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "Subtotal:",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                                color = Color.Black
-                            )
-                            Text(
-                                text = "Rs. 199.00",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                fontStyle = FontStyle.Normal,
-                                color = Color.Black
-                            )
-                        }
-                        Row( // discount
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "Discount:",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                                color = Color.Black
-                            )
-                            Text(
-                                text = "- Rs. 0.00",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                fontStyle = FontStyle.Normal,
-                                color = Color.Black
-                            )
-                        }
-                        Row( // taxes
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "Taxes:",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                                color = Color.Black
-                            )
-                            Text(
-                                text = "Rs. 39.00",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                fontStyle = FontStyle.Normal,
-                                color = Color.Black
-                            )
-                        }
-                        HorizontalDivider(
-                            modifier = Modifier.padding(horizontal = 2.dp, vertical = 4.dp),
-                            thickness = 1.dp,
-                            color = Color.Black.copy(alpha=0.5f)
-                        )
-                        Row( // total amt
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "Total:",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                                color = Color.Black
-                            )
-                            Text(
-                                text = "Rs. 248.00",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                fontStyle = FontStyle.Normal,
-                                color = Color.Black
-                            )
-                        }
-                    }
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(6.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(imageVector = Icons.Default.Warning, contentDescription = "Cancellation Information")
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = "Cancellation charges apply",
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 16.sp,
-                        fontStyle = FontStyle.Normal
-                    )
-                }
-                Box (
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    HorizontalDivider(
-                        modifier = Modifier
-                            .padding(horizontal = 40.dp, vertical = 16.dp)
-                        ,
-                        thickness = 2.dp,
-                        color = Color.LightGray.copy(alpha = 0.5f)
-                    )
-                }
-                Column (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 10.dp, top = 6.dp, bottom = 6.dp, end = 4.dp)
-                ) {
-                    Text(
-                        text = "Sip Coffee",
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Cursive,
-                        color = Color.Black,
-                        fontSize = 34.sp
-                    )
-                    Text(
-                        text = "Create Memories",
-                        fontWeight = FontWeight.ExtraBold,
-                        fontFamily = FontFamily.Cursive,
-                        color = Color.Black,
-                        fontSize = 44.sp
-                    )
-                }
-            }
+            Text("Browse Menu")
         }
     }
 }

@@ -24,6 +24,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -44,9 +48,28 @@ import com.example.koffi.ui.theme.koffiBrown
 
 //@Preview
 @Composable
-fun ProductScreen(navHostController: NavHostController) {
-//fun ProductScreen() {
+fun ProductScreen(
+    navHostController: NavHostController,
+    drinkId: String,
+    viewModel: ProductViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
     val scrollstate = rememberScrollState()
+    val uiState by viewModel.uiState.collectAsState()
+    LaunchedEffect(drinkId) {
+        viewModel.loadDrink(drinkId)
+    }
+    if (uiState.isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(bgWhite),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Loading...")
+        }
+        return
+    }
+    val drink = uiState.drink ?: return
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -98,14 +121,14 @@ fun ProductScreen(navHostController: NavHostController) {
                 }
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(
-                    text = "Classic Americano",
+                    text = drink.name,
                     fontWeight = FontWeight.Bold,
                     fontSize = 26.sp,
                     fontFamily = FontFamily.Default
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Rs 299.0",
+                    text = "Rs. ${uiState.finalPrice}",
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 20.sp,
                     fontFamily = FontFamily.Default,
@@ -126,6 +149,7 @@ fun ProductScreen(navHostController: NavHostController) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
+                    //text = drink.description,
                     text = "Classic Americano coffee, is an espresso shot with hot water at a 1:3 to 1:4 ratio, resulting in a drink that retains the complex flavors of espresso, but in a lighter way. Its strength varies with the number of shots of espresso and the amount of water added.",
                     fontWeight = FontWeight.Normal,
                     fontSize = 20.sp,
@@ -140,7 +164,10 @@ fun ProductScreen(navHostController: NavHostController) {
                 Spacer(modifier = Modifier.height(18.dp))
                 Button(
                     onClick = {
-                        navHostController.navigate(AppNavigationItem.CartScreen.route)
+                        viewModel.addToCart()
+                        navHostController.navigate(
+                            AppNavigationItem.CartScreen.route
+                        )
                     },
                     modifier = Modifier
                         .fillMaxWidth(),

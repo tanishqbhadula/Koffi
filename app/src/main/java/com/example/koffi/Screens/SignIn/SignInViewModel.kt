@@ -2,7 +2,7 @@ package com.example.koffi.Screens.SignUp
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.koffi.Repository.AuthRepository
+import com.example.koffi.Repository.Auth.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

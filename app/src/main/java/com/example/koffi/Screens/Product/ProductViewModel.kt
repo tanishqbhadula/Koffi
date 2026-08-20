@@ -1,125 +1,67 @@
 package com.example.koffi.Screens.Product
 
-import androidx.lifecycle.ViewModel
-import com.example.koffi.Screens.Cart.CartItem
-import com.example.koffi.Screens.Cart.CartManager
-import com.example.koffi.Models.Drink
-import com.example.koffi.Screens.Menu.MenuCategory
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.koffi.Database.AppDatabase
+import com.example.koffi.Database.Drink.DrinkEntity
+import com.example.koffi.Repository.Cart.CartRepository
+import com.example.koffi.Repository.Drink.DrinkRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
-val _drinks = listOf(
-    Drink(
-        id = "americano_classic",
-        name = "Classic Hot Americano",
-        description = "Classic Hot Americano",
-        price = 179.00,
-        categoryID = MenuCategory.HOT,
-        isRecommended = true,
-        isPopular= false
-    ),
-    Drink(
-        id = "cold_brew_classic",
-        name = "Classic Cold Brew",
-        description = "Classic Cold Brew",
-        price = 199.00,
-        categoryID = MenuCategory.COLD,
-        isRecommended = true,
-        isPopular= false
-    ),
-    Drink(
-        id = "espresso_double_shot",
-        name = "Double Shot Espresso",
-        description = "Double Shot Espresso",
-        price = 159.00,
-        categoryID = MenuCategory.HOT,
-        isRecommended = true,
-        isPopular= false
-    ),
-    Drink(
-        id = "espresso_triple_shot",
-        name = "Triple Shot Espresso",
-        description = "Triple Shot Espresso",
-        price = 169.00,
-        categoryID = MenuCategory.HOT,
-        isRecommended = false,
-        isPopular= false
-    ),
-    Drink(
-        id = "classsic_latte_hot",
-        name = "Classic Hot Latte",
-        description = "Classic Hot Latte",
-        price = 219.00,
-        categoryID = MenuCategory.HOT,
-        isRecommended = true,
-        isPopular= false
-    ),
-    Drink(
-        id = "classsic_mocha",
-        name = "Classic Mocha",
-        description = "Classic Mocha",
-        price = 239.00,
-        categoryID = MenuCategory.COLD,
-        isRecommended = true,
-        isPopular= false
-    ),
-    Drink(
-        id = "classsic_latte_hot",
-        name = "Classic Hot Latte",
-        description = "Classic Hot Latte",
-        price = 219.00,
-        categoryID = MenuCategory.HOT,
-        isRecommended = true,
-        isPopular= false
-    ),
-    Drink(
-        id = "classsic_latte_hot",
-        name = "Classic Hot Latte",
-        description = "Classic Hot Latte",
-        price = 219.00,
-        categoryID = MenuCategory.HOT,
-        isRecommended = true,
-        isPopular= false
-    ),
-    Drink(
-        id = "classsic_latte_hot",
-        name = "Classic Hot Latte",
-        description = "Classic Hot Latte",
-        price = 219.00,
-        categoryID = MenuCategory.HOT,
-        isRecommended = true,
-        isPopular= false
+class ProductViewModel(
+    application: Application
+) : AndroidViewModel(application) {
+
+    private val database = AppDatabase.getDatabase(application)
+
+    private val drinkRepository = DrinkRepository(
+        database.drinkDao()
     )
-)
 
-class ProductViewModel : ViewModel() {
+    private val cartRepository = CartRepository(
+        database.cartDao()
+    )
+
     private val _uiState = MutableStateFlow(ProductUiState())
     val uiState = _uiState.asStateFlow()
 
     fun loadDrink(drinkId: String) {
-        var drink: Drink? = null
-        for(_drink in _drinks) {
-            if((_drink.id).equals(drinkId)) drink = _drink
-        }
-        if(drink != null) {
-            _uiState.value = ProductUiState(
-                drink = drink,
-                finalPrice = drink.price,
-                isLoading = false
-            )
-        }
-        else {
-            // TODO()
+
+        viewModelScope.launch {
+
+            val drinkEntity =
+                drinkRepository.getDrinkById(drinkId)
+
+            if (drinkEntity != null) {
+
+                _uiState.value = ProductUiState(
+                    drink = drinkEntity.toDrink(),
+                    finalPrice = drinkEntity.price,
+                    isLoading = false
+                )
+
+            } else {
+
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false
+                )
+            }
         }
     }
 
     fun onSelectedSize(size: DrinkSizes) {
+
         val base = _uiState.value.drink?.price ?: return
-        val price = when(size) {
+
+        val price = when (size) {
             DrinkSizes.SMALL -> base
             DrinkSizes.MEDIUM -> base + 20.0
             DrinkSizes.LARGE -> base + 40.0
         }
+
         _uiState.value = _uiState.value.copy(
             selectedSize = size,
             finalPrice = price
@@ -127,17 +69,35 @@ class ProductViewModel : ViewModel() {
     }
 
     fun addToCart() {
-        val state = _uiState.value
-        val drink = state.drink?:return
 
-        CartManager.addItem(
-            CartItem(
-                id = drink.id,
+        val state = _uiState.value
+        val drink = state.drink ?: return
+
+        viewModelScope.launch {
+
+            cartRepository.addToCart(
+                productId = drink.id,
                 name = drink.name,
-                size = state.selectedSize,
-                quantity = 1,
+                size = state.selectedSize.name,
                 price = state.finalPrice
             )
-        )
+        }
     }
+}
+
+private fun DrinkEntity.toDrink(): com.example.koffi.Models.Drink {
+
+    return com.example.koffi.Models.Drink(
+        id = id,
+        name = name,
+        description = description,
+        price = price,
+        categoryID = when (category) {
+            "HOT" -> com.example.koffi.Screens.Menu.MenuCategory.HOT
+            "COLD" -> com.example.koffi.Screens.Menu.MenuCategory.COLD
+            else -> com.example.koffi.Screens.Menu.MenuCategory.ALL
+        },
+        isRecommended = isRecommended,
+        isPopular = isPopular
+    )
 }

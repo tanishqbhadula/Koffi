@@ -36,90 +36,93 @@ import com.example.koffi.Models.Drink
 import com.example.koffi.Navigation.AppNavigationItem
 import com.example.koffi.ui.theme.bgWhite
 import com.example.koffi.ui.theme.koffiBrown
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 
-val _drinks = listOf(
-    Drink(
-        id = "americano_classic",
-        name = "Classic Hot Americano",
-        description = "Classic Hot Americano",
-        price = 179.00,
-        categoryID = MenuCategory.HOT,
-        isRecommended = true,
-        isPopular= false
-    ),
-    Drink(
-        id = "cold_brew_classic",
-        name = "Classic Cold Brew",
-        description = "Classic Cold Brew",
-        price = 199.00,
-        categoryID = MenuCategory.COLD,
-        isRecommended = true,
-        isPopular= false
-    ),
-    Drink(
-        id = "espresso_double_shot",
-        name = "Double Shot Espresso",
-        description = "Double Shot Espresso",
-        price = 159.00,
-        categoryID = MenuCategory.HOT,
-        isRecommended = true,
-        isPopular= false
-    ),
-    Drink(
-        id = "espresso_triple_shot",
-        name = "Triple Shot Espresso",
-        description = "Triple Shot Espresso",
-        price = 169.00,
-        categoryID = MenuCategory.HOT,
-        isRecommended = false,
-        isPopular= false
-    ),
-    Drink(
-        id = "classsic_latte_hot",
-        name = "Classic Hot Latte",
-        description = "Classic Hot Latte",
-        price = 219.00,
-        categoryID = MenuCategory.HOT,
-        isRecommended = true,
-        isPopular= false
-    ),
-    Drink(
-        id = "classsic_mocha",
-        name = "Classic Mocha",
-        description = "Classic Mocha",
-        price = 239.00,
-        categoryID = MenuCategory.COLD,
-        isRecommended = true,
-        isPopular= false
-    ),
-    Drink(
-        id = "classsic_latte_hot",
-        name = "Classic Hot Latte",
-        description = "Classic Hot Latte",
-        price = 219.00,
-        categoryID = MenuCategory.HOT,
-        isRecommended = true,
-        isPopular= false
-    ),
-    Drink(
-        id = "classsic_latte_hot",
-        name = "Classic Hot Latte",
-        description = "Classic Hot Latte",
-        price = 219.00,
-        categoryID = MenuCategory.HOT,
-        isRecommended = true,
-        isPopular= false
-    ),
-    Drink(
-        id = "classsic_latte_hot",
-        name = "Classic Hot Latte",
-        description = "Classic Hot Latte",
-        price = 219.00,
-        categoryID = MenuCategory.HOT,
-        isRecommended = true,
-        isPopular= false
-    )
-)
+//val _drinks = listOf(
+//    Drink(
+//        id = "americano_classic",
+//        name = "Classic Hot Americano",
+//        description = "Classic Hot Americano",
+//        price = 179.00,
+//        categoryID = MenuCategory.HOT,
+//        isRecommended = true,
+//        isPopular= false
+//    ),
+//    Drink(
+//        id = "cold_brew_classic",
+//        name = "Classic Cold Brew",
+//        description = "Classic Cold Brew",
+//        price = 199.00,
+//        categoryID = MenuCategory.COLD,
+//        isRecommended = true,
+//        isPopular= false
+//    ),
+//    Drink(
+//        id = "espresso_double_shot",
+//        name = "Double Shot Espresso",
+//        description = "Double Shot Espresso",
+//        price = 159.00,
+//        categoryID = MenuCategory.HOT,
+//        isRecommended = true,
+//        isPopular= false
+//    ),
+//    Drink(
+//        id = "espresso_triple_shot",
+//        name = "Triple Shot Espresso",
+//        description = "Triple Shot Espresso",
+//        price = 169.00,
+//        categoryID = MenuCategory.HOT,
+//        isRecommended = false,
+//        isPopular= false
+//    ),
+//    Drink(
+//        id = "classsic_latte_hot",
+//        name = "Classic Hot Latte",
+//        description = "Classic Hot Latte",
+//        price = 219.00,
+//        categoryID = MenuCategory.HOT,
+//        isRecommended = true,
+//        isPopular= false
+//    ),
+//    Drink(
+//        id = "classsic_mocha",
+//        name = "Classic Mocha",
+//        description = "Classic Mocha",
+//        price = 239.00,
+//        categoryID = MenuCategory.COLD,
+//        isRecommended = true,
+//        isPopular= false
+//    ),
+//    Drink(
+//        id = "classsic_latte_hot",
+//        name = "Classic Hot Latte",
+//        description = "Classic Hot Latte",
+//        price = 219.00,
+//        categoryID = MenuCategory.HOT,
+//        isRecommended = true,
+//        isPopular= false
+//    ),
+//    Drink(
+//        id = "classsic_latte_hot",
+//        name = "Classic Hot Latte",
+//        description = "Classic Hot Latte",
+//        price = 219.00,
+//        categoryID = MenuCategory.HOT,
+//        isRecommended = true,
+//        isPopular= false
+//    ),
+//    Drink(
+//        id = "classsic_latte_hot",
+//        name = "Classic Hot Latte",
+//        description = "Classic Hot Latte",
+//        price = 219.00,
+//        categoryID = MenuCategory.HOT,
+//        isRecommended = true,
+//        isPopular= false
+//    )
+//)
 @Composable
 fun MenuRoute(
         viewModel: MenuViewModel,
@@ -145,88 +148,121 @@ fun MenuRoute(
 
 //@Preview
 @Composable
-fun MenuScreen(navHostController: NavHostController) {
-    val scrollState = rememberScrollState()
-    Scaffold (
+fun MenuScreen(
+    navHostController: NavHostController,
+    viewModel: MenuViewModel = viewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .background(bgWhite)
     ) { innerPadding ->
-        Box(
+
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .background(bgWhite)
         ) {
-            Column ( // PARENT COL WITH SCROLL
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(bgWhite)
-                    //.verticalScroll(scrollState)
-            ){
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Box (
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(koffiBrown)
-                            .shadow(
-                                elevation = 8.dp,
-                                shape = RoundedCornerShape(bottomStart = 40.dp, bottomEnd = 40.dp),
-                                ambientColor = DefaultShadowColor,
-                                spotColor = DefaultShadowColor
-                            )
 
-                    ) {
-                        Row (
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            IconButton(onClick = { // BACK BUTTON - GO BACK TO HOME PAGE
-                                navHostController.popBackStack()
-                            }) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = "back",
-                                    tint = bgWhite,
-                                    modifier = Modifier.weight(1f)
-                                )
-                            }
-                            Text(
-                                text = "Menu",
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 12.dp),
-                                fontSize = 22.sp,
-                                color = bgWhite,
-                                fontWeight = FontWeight.ExtraBold,
-                                fontFamily = FontFamily.Default,
-                                letterSpacing = 2.sp
-                            )
+            // TOP BAR
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(koffiBrown)
+                    .shadow(
+                        elevation = 8.dp,
+                        shape = RoundedCornerShape(
+                            bottomStart = 40.dp,
+                            bottomEnd = 40.dp
+                        )
+                    )
+            ) {
+
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+
+                    IconButton(
+                        onClick = {
+                            navHostController.popBackStack()
                         }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = bgWhite
+                        )
+                    }
+
+                    Text(
+                        text = "Menu",
+                        modifier = Modifier.padding(
+                            horizontal = 6.dp,
+                            vertical = 12.dp
+                        ),
+                        fontSize = 22.sp,
+                        color = bgWhite,
+                        fontWeight = FontWeight.ExtraBold,
+                        letterSpacing = 2.sp
+                    )
+                }
+            }
+
+            // CATEGORY ROW
+            MenuCategoryRow(
+                categories = MenuCategory.entries,
+                selected = uiState.selectedCategory,
+                onCategorySelected = {
+                    viewModel.onCategorySelected(it)
+                }
+            )
+
+            // DRINK LIST
+            when {
+                uiState.isLoading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = androidx.compose.ui.Alignment.Center
+                    ) {
+                        Text("Loading menu...")
                     }
                 }
-                // START MENU HERE
-                Column (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    MenuCategoryRow(
-                        categories = MenuCategory.entries,
-                        selected = MenuCategory.ALL,
-                        onCategorySelected = {}
-                    )
-                    LazyColumn (
+
+                uiState.items.isEmpty() -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = androidx.compose.ui.Alignment.Center
+                    ) {
+                        Text("No drinks available")
+                    }
+                }
+
+                else -> {
+                    LazyColumn(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .weight(1f),
                         contentPadding = PaddingValues(16.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        items(_drinks) { drink->
+
+                        items(
+                            items = uiState.items,
+                            key = { drink -> drink.id }
+                        ) { drink ->
+
                             MenuItemCard(
                                 drink = drink,
-                                onClick = { // GO TO DRINK - FOR TESTING ROUTE ALL TO CLASSIC AMERICANO DESC PAGE
-                                    //Log.d("Koffi","prod screen clicked")
-                                    navHostController.navigate(AppNavigationItem.ProductScreen.route)
+                                onClick = {
+
+                                    navHostController.navigate(
+                                        AppNavigationItem.ProductScreen.createRoute(
+                                            drink.id
+                                        )
+                                    )
                                 }
                             )
                         }

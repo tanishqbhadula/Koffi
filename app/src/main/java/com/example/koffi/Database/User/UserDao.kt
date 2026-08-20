@@ -1,4 +1,4 @@
-package com.example.koffi.Database
+package com.example.koffi.Database.User
 
 import androidx.room.Dao
 import androidx.room.Insert
